@@ -90,7 +90,7 @@ public class present_view extends AppCompatActivity {
             group_id = getIntent().getStringExtra("group_id");
             date = config.attend_date();
 
-            MaterialDatePicker.Builder materialDateBuilder = MaterialDatePicker.Builder.datePicker();
+            MaterialDatePicker.Builder<Long> materialDateBuilder = MaterialDatePicker.Builder.datePicker();
 
             materialDateBuilder.setTitleText("SELECT A DATE");
             materialDateBuilder.setTheme(R.style.RoundShapeCalenderTheme);

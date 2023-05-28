@@ -56,29 +56,23 @@ public class attend extends AppCompatActivity {
             period_id = getIntent().getStringExtra("period_id");
             group_id = getIntent().getStringExtra("group_id");
 
-            back.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    onBackPressed();
-                    finish();
-                }
+            back.setOnClickListener(v -> {
+                onBackPressed();
+                finish();
             });
-            submit.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    MaterialAlertDialogBuilder dialogBuilder = new MaterialAlertDialogBuilder(attend.this);
-                    dialogBuilder.setTitle("Student Attendance");
-                    dialogBuilder.setMessage("Are you sure, you want to submit all Attendance?");
-                    dialogBuilder.setCancelable(false);
-                    dialogBuilder.setNegativeButton("Cancel", (dialog, which) -> {
-                        dialog.cancel();
-                    });
-                    dialogBuilder.setPositiveButton("yes", (dialog, which) -> {
-                        submit();
-                    });
-                    dialogBuilder.show();
+            submit.setOnClickListener(v -> {
+                MaterialAlertDialogBuilder dialogBuilder = new MaterialAlertDialogBuilder(attend.this);
+                dialogBuilder.setTitle("Student Attendance");
+                dialogBuilder.setMessage("Are you sure, you want to submit all Attendance?");
+                dialogBuilder.setCancelable(false);
+                dialogBuilder.setNegativeButton("Cancel", (dialog, which) -> {
+                    dialog.cancel();
+                });
+                dialogBuilder.setPositiveButton("yes", (dialog, which) -> {
+                    submit();
+                });
+                dialogBuilder.show();
 
-                }
             });
             doInBackground();
 
@@ -153,18 +147,18 @@ public class attend extends AppCompatActivity {
                     while (cursor.moveToNext()) {
                         attend_model = new attend_model(cursor.getString(cursor.getColumnIndexOrThrow("id"))
                                 ,cursor.getString(cursor.getColumnIndexOrThrow("roll")),
-                                cursor.getString(cursor.getColumnIndexOrThrow("student_name")),"1",
+                                cursor.getString(cursor.getColumnIndexOrThrow("student_name")),"0",
                                 cursor.getString(cursor.getColumnIndexOrThrow("id"))+".jpg");
                         attend_adapter.adduser(attend_model);
                         homeViewModel.addTemp(attend.this,attend_model);
 
                     }
                 }
-            } catch (Exception e) {
+            } catch (Exception ignored) {
             } finally {
                 try {
                     sqliteDB.close();
-                } catch (Exception e) {
+                } catch (Exception ignored) {
                 }
             }
             return attend_adapter;

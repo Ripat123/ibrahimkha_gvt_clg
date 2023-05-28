@@ -233,8 +233,8 @@ public class HomeViewModel extends ViewModel {
 
     public void addTemp(Context context,attend_model attend_model){
         try {
-            config.add_attend_temp(context,attend_model.getId(),"1","");
-        }catch (Exception e){
+            config.add_attend_temp(context,attend_model.getId(),"0","");
+        }catch (Exception ignored){
         }
     }
     public void deleteTemp(Context context){

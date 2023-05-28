@@ -422,11 +422,11 @@ public class config {
             boolean ch = sqlite_db.DataOperation(contentValues, "insert", "attendance_temp", null);
             if (!ch)
                 Toast.makeText(context, "Failed to add temp", Toast.LENGTH_SHORT).show();
-        } catch (Exception e) {
+        } catch (Exception ignored) {
         } finally {
             try {
                 sqlite_db.close();
-            } catch (Exception e) {
+            } catch (Exception ignored) {
             }
         }
     }
@@ -440,11 +440,11 @@ public class config {
                 Toast.makeText(context, "failed", Toast.LENGTH_SHORT).show();
             }
 
-        } catch (Exception e) {
+        } catch (Exception ignored) {
         } finally {
             try {
                 sqliteDB.close();
-            } catch (Exception e) {
+            } catch (Exception ignored) {
             }
         }
     }

@@ -45,8 +45,7 @@ public class attend_adapter extends RecyclerView.Adapter<attend_adapter.userHold
     @Override
     public userHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View inflat = LayoutInflater.from(parent.getContext()).inflate(R.layout.present_card, null);
-        userHolder userHolder = new userHolder(inflat);
-        return userHolder;
+        return new userHolder(inflat);
     }
 
     @Override
@@ -60,11 +59,11 @@ public class attend_adapter extends RecyclerView.Adapter<attend_adapter.userHold
     public int getItemCount() {
         return attend_models.size();
     }
-
-    public void animate(RecyclerView.ViewHolder viewHolder) {
-        final Animation animAnticipateOvershoot = AnimationUtils.loadAnimation(context, R.anim.anti_bounce);
-        viewHolder.itemView.setAnimation(animAnticipateOvershoot);
-    }
+//
+//    public void animate(RecyclerView.ViewHolder viewHolder) {
+//        final Animation animAnticipateOvershoot = AnimationUtils.loadAnimation(context, R.anim.anti_bounce);
+//        viewHolder.itemView.setAnimation(animAnticipateOvershoot);
+//    }
 
     public void Clear() {
         attend_models.clear();
@@ -145,121 +144,98 @@ public class attend_adapter extends RecyclerView.Adapter<attend_adapter.userHold
 //                    updateUser(new attend_model(attend_model.getId(), attend_model.getRoll(), attend_model.getName(), "0", ""));
                 }
 
-                attend_card.setOnClickListener(new View.OnClickListener() {
+                attend_card.setOnClickListener(v -> {
+                    try {
+                        if (attend_model.getAttend_status().equals("0") || attend_model.getAttend_status().equals("2")) {
+                            attend_card.getBackground().setTint(Color.GREEN);
+                            attend_status.setText("P");
+                            updateUser(new attend_model(attend_model.getId(), attend_model.getRoll(), attend_model.getName(), "1", attend_model.getImage()));
 
-                    @Override
-                    public void onClick(View v) {
-                        try {
-                            if (attend_model.getAttend_status().equals("0") || attend_model.getAttend_status().equals("2")) {
-                                attend_card.getBackground().setTint(Color.GREEN);
-                                attend_status.setText("P");
-                                updateUser(new attend_model(attend_model.getId(), attend_model.getRoll(), attend_model.getName(), "1", attend_model.getImage()));
-
-                                if (check == 1) {
-                                    config.Live_update_status(context1, attend_model.getImage(), "1");
-                                    config.Live_update_comment(context1, attend_model.getImage(), "");
-                                    config.Live_update_time(context1, attend_model.getImage());
-                                } else {
-                                    config.update_status(context1, attend_model.getId(), "1");
-                                    config.update_comment(context1, attend_model.getId(), "");
-                                }
+                            if (check == 1) {
+                                config.Live_update_status(context1, attend_model.getImage(), "1");
+                                config.Live_update_comment(context1, attend_model.getImage(), "");
+                                config.Live_update_time(context1, attend_model.getImage());
                             } else {
-                                attend_card.getBackground().setTint(Color.RED);
-                                attend_status.setText("A");
-                                updateUser(new attend_model(attend_model.getId(), attend_model.getRoll(), attend_model.getName(), "0", attend_model.getImage()));
-
-                                if (check == 1) {
-                                    config.Live_update_status(context1, attend_model.getImage(), "0");
-                                    config.Live_update_comment(context1, attend_model.getImage(), "");
-                                    config.Live_update_time(context1, attend_model.getImage());
-                                } else {
-                                    config.update_status(context1, attend_model.getId(), "0");
-                                    config.update_comment(context1, attend_model.getId(), "");
-                                }
+                                config.update_status(context1, attend_model.getId(), "1");
+                                config.update_comment(context1, attend_model.getId(), "");
                             }
-                        } catch (Exception e) {
+                        } else {
+                            attend_card.getBackground().setTint(Color.RED);
+                            attend_status.setText("A");
+                            updateUser(new attend_model(attend_model.getId(), attend_model.getRoll(), attend_model.getName(), "0", attend_model.getImage()));
+
+                            if (check == 1) {
+                                config.Live_update_status(context1, attend_model.getImage(), "0");
+                                config.Live_update_comment(context1, attend_model.getImage(), "");
+                                config.Live_update_time(context1, attend_model.getImage());
+                            } else {
+                                config.update_status(context1, attend_model.getId(), "0");
+                                config.update_comment(context1, attend_model.getId(), "");
+                            }
                         }
+                    } catch (Exception ignored) {
+                    }
 
 
-                    }
                 });
-                attend_card.setOnLongClickListener(new View.OnLongClickListener() {
-                    @Override
-                    public boolean onLongClick(View v) {
-                        attend_card.getBackground().setTint(Color.CYAN);
-                        attend_status.setText("L");
-                        updateUser(new attend_model(attend_model.getId(), attend_model.getRoll(), attend_model.getName(), "2", attend_model.getImage()));
-                        if (check == 1) {
-                            config.Live_update_status(context1, attend_model.getImage(), "2");
-                            config.Live_update_comment(context1, attend_model.getImage(), "");
-                            config.Live_update_time(context1, attend_model.getImage());
-                        }
-                        else {
-                            config.update_status(context1, attend_model.getId(), "2");
-                            config.update_comment(context1, attend_model.getId(), "");
-                        }
-
-                        View view = LayoutInflater.from(context1).inflate(R.layout.textfield3, null);
-                        EditText comment = view.findViewById(R.id.comment);
-                        MaterialAlertDialogBuilder dialogBuilder = new MaterialAlertDialogBuilder(context1,R.style.RoundShapeTheme);
-                        dialogBuilder.setTitle("Add Comment(Optional)");
-                        dialogBuilder.setCancelable(false);
-                        dialogBuilder.setView(view);
-                        dialogBuilder.setNegativeButton("Cancel", (dialog, which) -> {
-
-                            dialog.cancel();
-                        });
-                        dialogBuilder.setPositiveButton("OK", (dialog, which) -> {
-                            if (check == 1)
-                                config.Live_update_comment(context1, attend_model.getImage(), comment.getText().toString().trim());
-                            else
-                                config.update_comment(context1, attend_model.getId(), comment.getText().toString().trim());
-                        });
-                        dialogBuilder.show();
-                        return true;
+                attend_card.setOnLongClickListener(v -> {
+                    attend_card.getBackground().setTint(Color.CYAN);
+                    attend_status.setText("L");
+                    updateUser(new attend_model(attend_model.getId(), attend_model.getRoll(), attend_model.getName(), "2", attend_model.getImage()));
+                    if (check == 1) {
+                        config.Live_update_status(context1, attend_model.getImage(), "2");
+                        config.Live_update_comment(context1, attend_model.getImage(), "");
+                        config.Live_update_time(context1, attend_model.getImage());
                     }
+                    else {
+                        config.update_status(context1, attend_model.getId(), "2");
+                        config.update_comment(context1, attend_model.getId(), "");
+                    }
+
+                    View view = LayoutInflater.from(context1).inflate(R.layout.textfield3, null);
+                    EditText comment = view.findViewById(R.id.comment);
+                    MaterialAlertDialogBuilder dialogBuilder = new MaterialAlertDialogBuilder(context1,R.style.RoundShapeTheme);
+                    dialogBuilder.setTitle("Add Comment(Optional)");
+                    dialogBuilder.setCancelable(false);
+                    dialogBuilder.setView(view);
+                    dialogBuilder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
+                    dialogBuilder.setPositiveButton("OK", (dialog, which) -> {
+                        if (check == 1)
+                            config.Live_update_comment(context1, attend_model.getImage(), comment.getText().toString().trim());
+                        else
+                            config.update_comment(context1, attend_model.getId(), comment.getText().toString().trim());
+                    });
+                    dialogBuilder.show();
+                    return true;
                 });
 
-                comment_card.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        View view = LayoutInflater.from(context1).inflate(R.layout.textfield3, null);
-                        EditText comment = view.findViewById(R.id.comment);
-                        MaterialAlertDialogBuilder dialogBuilder = new MaterialAlertDialogBuilder(context1,R.style.RoundShapeTheme);
-                        dialogBuilder.setTitle("Add Comment");
-                        dialogBuilder.setCancelable(false);
-                        dialogBuilder.setView(view);
-                        dialogBuilder.setNegativeButton("Cancel", (dialog, which) -> {
-                            dialog.cancel();
-                        });
-                        dialogBuilder.setPositiveButton("OK", (dialog, which) -> {
-                            if (check == 1)
-                                config.Live_update_comment(context1, attend_model.getImage(), comment.getText().toString().trim());
-                            else
-                                config.update_comment(context1, attend_model.getId(), comment.getText().toString().trim());
-                        });
-                        dialogBuilder.show();
-                    }
+                comment_card.setOnClickListener(v -> {
+                    View view = LayoutInflater.from(context1).inflate(R.layout.textfield3, null);
+                    EditText comment = view.findViewById(R.id.comment);
+                    MaterialAlertDialogBuilder dialogBuilder = new MaterialAlertDialogBuilder(context1,R.style.RoundShapeTheme);
+                    dialogBuilder.setTitle("Add Comment");
+                    dialogBuilder.setCancelable(false);
+                    dialogBuilder.setView(view);
+                    dialogBuilder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
+                    dialogBuilder.setPositiveButton("OK", (dialog, which) -> {
+                        if (check == 1)
+                            config.Live_update_comment(context1, attend_model.getImage(), comment.getText().toString().trim());
+                        else
+                            config.update_comment(context1, attend_model.getId(), comment.getText().toString().trim());
+                    });
+                    dialogBuilder.show();
                 });
-                main_card.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Toast.makeText(context, attend_model.getRoll() + "\n" + attend_model.getName(), Toast.LENGTH_SHORT).show();
-                    }
+                main_card.setOnClickListener(v -> Toast.makeText(context, attend_model.getRoll() + "\n" + attend_model.getName(), Toast.LENGTH_SHORT).show());
+                main_card.setOnLongClickListener(v -> {
+                    Intent intent = new Intent(context1, student_details.class);
+                    intent.putExtra("roll", attend_model.getRoll());
+                    intent.putExtra("name", attend_model.getName());
+                    intent.putExtra("id", attend_model.getId());
+                    intent.putExtra("image", attend_model.getId() + ".jpg");
+                    context1.startActivity(intent);
+                    return true;
                 });
-                main_card.setOnLongClickListener(new View.OnLongClickListener() {
-                    @Override
-                    public boolean onLongClick(View v) {
-                        Intent intent = new Intent(context1, student_details.class);
-                        intent.putExtra("roll", attend_model.getRoll());
-                        intent.putExtra("name", attend_model.getName());
-                        intent.putExtra("id", attend_model.getId());
-                        intent.putExtra("image", attend_model.getId() + ".jpg");
-                        context1.startActivity(intent);
-                        return true;
-                    }
-                });
-            } catch (Exception e) {
+            } catch (Exception ignored) {
             }
         }
 
